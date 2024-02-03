@@ -1,0 +1,35 @@
+<style>
+    ul.jobs {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    ul.jobs li {
+        border: 1px solid #000;
+        margin: .2rem;
+        padding: .2rem;
+        list-style: none;
+    }
+
+    .failure {
+        background: #f00;
+    }
+</style>
+
+{{ range .Commits }}
+<h2><a href="https://github.com/{{ $.Owner }}/{{ $.Repo }}/commit/{{ .SHA }}">{{ .Title }}</a></h2>
+<ul>
+    {{ range (index $.CommitToRuns .SHA) }}
+    <li>{{ .Conclusion }}: {{ .Name }}
+
+        <ul class="jobs">
+        {{ range (index $.FailedRunToJobs .GetID) }}
+            <li class="{{ .GetConclusion }}">{{ .GetName }}</li>
+        {{ end }}
+        </ul>
+    </li>
+
+
+    {{ end }}
+</ul>
+{{ end }}
